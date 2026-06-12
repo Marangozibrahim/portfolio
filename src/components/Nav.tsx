@@ -18,13 +18,15 @@ export function Nav() {
         </a>
         <button
           type="button"
-          className="nav-toggle"
+          className={`nav-toggle${open ? " open" : ""}`}
           aria-expanded={open}
           aria-controls="nav-menu"
           aria-label={open ? "Close menu" : "Open menu"}
           onClick={() => setOpen((o) => !o)}
         >
-          {open ? "✕" : "☰"}
+          <span className="bar" aria-hidden="true" />
+          <span className="bar" aria-hidden="true" />
+          <span className="bar" aria-hidden="true" />
         </button>
         <ul id="nav-menu" className={`nav-links${open ? " open" : ""}`}>
           {links.map((link) => (

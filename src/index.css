@@ -107,14 +107,16 @@ button:focus-visible {
 
 .nav-toggle {
   display: none;
-  font-family: inherit;
-  font-size: 15px;
-  line-height: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  width: 36px;
+  height: 30px;
   color: var(--text);
   background: transparent;
   border: 1px solid var(--border-bright);
   border-radius: 4px;
-  padding: 6px 10px;
   cursor: pointer;
   transition:
     border-color 0.15s ease,
@@ -124,6 +126,28 @@ button:focus-visible {
 .nav-toggle:hover {
   border-color: var(--accent);
   color: var(--accent);
+}
+
+.nav-toggle .bar {
+  width: 16px;
+  height: 2px;
+  background: currentColor;
+  transition:
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.2s ease;
+}
+
+/* bars morph into an X when open */
+.nav-toggle.open .bar:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.nav-toggle.open .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle.open .bar:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
 }
 
 .nav-links {
@@ -339,6 +363,8 @@ button:focus-visible {
 .section {
   padding: 70px 0;
   border-top: 1px solid var(--border);
+  /* keep anchored headings clear of the 56px sticky nav */
+  scroll-margin-top: 56px;
 }
 
 .section-title {
@@ -778,6 +804,10 @@ button:focus-visible {
 
   .nav-links.open {
     animation: none;
+  }
+
+  .nav-toggle .bar {
+    transition: none;
   }
 
   .project-card:hover,
