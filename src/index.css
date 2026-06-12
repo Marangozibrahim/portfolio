@@ -737,11 +737,34 @@ body::after {
   animation: blink 1.1s steps(1) infinite;
 }
 
+/* ---------- motion text (masked word reveal) ---------- */
+
+.mt-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  white-space: pre;
+}
+
+.mt-word {
+  display: inline-block;
+  transform: translateY(115%);
+  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.motion-text.is-visible .mt-word {
+  transform: none;
+}
+
+/* hero scroll-exit wrapper — style mutated by useScrollExit */
+.hero-exit {
+  will-change: opacity, transform;
+}
+
 /* ---------- sections ---------- */
 
 .section {
   padding: 70px 0;
-  border-top: 1px solid var(--border);
   /* keep anchored headings clear of the 56px sticky nav */
   scroll-margin-top: 56px;
 }
@@ -1192,6 +1215,11 @@ body::after {
   .reveal,
   .skills-row {
     opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .mt-word {
     transform: none;
     transition: none;
   }

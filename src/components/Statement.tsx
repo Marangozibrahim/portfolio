@@ -1,5 +1,6 @@
 import { profile } from "../data/profile";
 import { statement } from "../data/statement";
+import { MotionText } from "./MotionText";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
 
@@ -13,11 +14,13 @@ export function Statement() {
           ))}
         </ul>
       </Reveal>
-      <Reveal delay={120}>
-        <h2 className="statement">{statement.heading}</h2>
-      </Reveal>
-      <Reveal delay={240}>
-        <p className="statement-bio">{statement.bio}</p>
+      <MotionText as="h2" className="statement" delay={100} stagger={40}>
+        {statement.heading}
+      </MotionText>
+      <MotionText className="statement-bio" delay={150} stagger={14}>
+        {statement.bio}
+      </MotionText>
+      <Reveal delay={300}>
         <div className="hero-actions">
           <a className="btn btn-primary" href={`mailto:${profile.email}`}>
             write to me

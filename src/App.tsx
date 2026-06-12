@@ -8,8 +8,11 @@ import { Nav } from "./components/Nav";
 import { Projects } from "./components/Projects";
 import { Skills } from "./components/Skills";
 import { Statement } from "./components/Statement";
+import { useSmoothScroll } from "./hooks/useSmoothScroll";
 
 export default function App() {
+  useSmoothScroll();
+
   return (
     <>
       <BootLoader />
