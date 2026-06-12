@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const links = [
   { href: "#projects", label: "/projects" },
   { href: "#experience", label: "/experience" },
@@ -6,16 +8,30 @@ const links = [
 ];
 
 export function Nav() {
+  const [open, setOpen] = useState(false);
+
   return (
     <nav className="nav">
       <div className="container nav-inner">
         <a href="#" className="nav-logo">
           ~/marangoz<span className="logo-caret" aria-hidden="true" />
         </a>
-        <ul className="nav-links">
+        <button
+          type="button"
+          className="nav-toggle"
+          aria-expanded={open}
+          aria-controls="nav-menu"
+          aria-label={open ? "Close menu" : "Open menu"}
+          onClick={() => setOpen((o) => !o)}
+        >
+          {open ? "✕" : "☰"}
+        </button>
+        <ul id="nav-menu" className={`nav-links${open ? " open" : ""}`}>
           {links.map((link) => (
             <li key={link.href}>
-              <a href={link.href}>{link.label}</a>
+              <a href={link.href} onClick={() => setOpen(false)}>
+                {link.label}
+              </a>
             </li>
           ))}
         </ul>

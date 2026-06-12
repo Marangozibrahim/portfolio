@@ -67,10 +67,13 @@ button:focus-visible {
   outline-offset: 3px;
 }
 
+/* horizontal only — never the padding shorthand; elements that combine
+   .container with another class own their own vertical padding */
 .container {
   max-width: var(--max-w);
   margin: 0 auto;
-  padding: 0 24px;
+  padding-left: 24px;
+  padding-right: 24px;
 }
 
 /* ---------- nav ---------- */
@@ -99,6 +102,27 @@ button:focus-visible {
 
 .nav-logo:hover {
   text-decoration: none;
+  color: var(--accent);
+}
+
+.nav-toggle {
+  display: none;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--border-bright);
+  border-radius: 4px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.nav-toggle:hover {
+  border-color: var(--accent);
   color: var(--accent);
 }
 
@@ -153,10 +177,23 @@ button:focus-visible {
   }
 }
 
+@keyframes menu-down {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* ---------- hero ---------- */
 
+/* vertical only — horizontal padding comes from .container */
 .hero {
-  padding: 110px 0 90px;
+  padding-top: 110px;
+  padding-bottom: 90px;
 }
 
 .hero-status {
@@ -237,6 +274,8 @@ button:focus-visible {
   border-radius: 4px;
   color: var(--text);
   background: var(--bg-raised);
+  max-width: 100%;
+  overflow-wrap: anywhere;
   transition:
     border-color 0.15s ease,
     background 0.15s ease;
@@ -573,7 +612,8 @@ button:focus-visible {
 
 .footer {
   border-top: 1px solid var(--border);
-  padding: 28px 0;
+  padding-top: 28px;
+  padding-bottom: 28px;
   font-size: 12px;
   color: var(--text-faint);
   display: flex;
@@ -584,21 +624,131 @@ button:focus-visible {
 
 /* ---------- responsive ---------- */
 
-@media (max-width: 560px) {
+@media (max-width: 720px) {
+  .container {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .nav-toggle {
+    display: inline-flex;
+  }
+
+  /* collapsed by default; .open drops an absolute panel below the bar
+     so the 56px nav row never changes height */
   .nav-links {
-    gap: 14px;
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 0;
+    padding: 6px 18px 12px;
+    background: rgba(11, 13, 16, 0.97);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-links.open {
+    display: flex;
+    animation: menu-down 0.22s ease;
+  }
+
+  .nav-links a {
+    display: block;
+    padding: 10px 0;
+    font-size: 13px;
+  }
+
+  .nav-links a::before {
+    content: "> ";
+    color: var(--accent);
+  }
+
+  .nav-links a::after {
+    display: none;
   }
 
   .hero {
-    padding: 70px 0 60px;
+    padding-top: 64px;
+    padding-bottom: 56px;
+  }
+
+  .hero-tagline {
+    font-size: 14px;
   }
 
   .section {
-    padding: 50px 0;
+    padding: 48px 0;
+  }
+
+  .section-title {
+    margin-bottom: 28px;
+  }
+
+  .project-card {
+    padding: 18px 16px;
+  }
+
+  .project-highlights,
+  .xp-bullets {
+    font-size: 13px;
+  }
+
+  .xp-item {
+    padding-left: 18px;
   }
 
   .skills-block {
-    padding: 20px;
+    padding: 16px 14px;
+    font-size: 12.5px;
+  }
+
+  /* let JSON rows wrap instead of forcing horizontal scroll */
+  .skills-row {
+    white-space: normal;
+    padding-left: 16px;
+    margin-bottom: 8px;
+  }
+
+  .contact-links {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .contact-links .btn {
+    text-align: center;
+  }
+}
+
+@media (max-width: 380px) {
+  .container {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .nav-links {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  body {
+    font-size: 14px;
+  }
+
+  .hero-actions .btn {
+    flex: 1;
+    text-align: center;
+  }
+
+  .stack-tags {
+    gap: 6px;
+  }
+
+  .stack-tags span {
+    font-size: 11px;
   }
 }
 
@@ -624,6 +774,10 @@ button:focus-visible {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+
+  .nav-links.open {
+    animation: none;
   }
 
   .project-card:hover,
