@@ -19,7 +19,7 @@ No test suite exists.
 
 ## Architecture
 
-**Content lives in `src/data/`, never in components.** `profile.ts`, `projects.ts`, `experience.ts`, `skills.ts` hold all CV content, typed by interfaces in `src/types.ts`. To update site text/projects/skills, edit data files only — components render whatever the data layer provides.
+**Content lives in `src/data/`, never in components.** `profile.ts`, `projects.ts`, `experience.ts`, `skills.ts`, `statement.ts` hold all CV content, typed by interfaces in `src/types.ts` (statement is self-typed). To update site text/projects/skills, edit data files only — components render whatever the data layer provides. Exception: the terminal hero's command script lives in the `entries` array in `TerminalHero.tsx`.
 
 **Styling is a single plain-CSS file** (`src/index.css`) with design tokens as CSS variables under `:root` (colors, font, max-width). No Tailwind, no CSS modules, no styled-components. Dark industrial/terminal aesthetic: JetBrains Mono everywhere, dot-grid background, `--accent` blue. Keep new styles in this file using the existing token variables.
 
@@ -29,7 +29,13 @@ No test suite exists.
 - `src/hooks/useReveal.ts` — IntersectionObserver hook; adds `is-visible` class on scroll into view.
 - `src/components/Reveal.tsx` — wrapper using the hook; accepts `delay` (ms) for stagger.
 - `index.css` couples to it: `.reveal.is-visible` triggers not only the wrapper fade-up but also descendant animations (`.section-title::after` underline grow, `.skills-row` slide-in). Hero load animations use the `.fade-up` class with a `--d` CSS variable for stagger delay, set inline in `Hero.tsx`.
-- `Typewriter.tsx` — self-contained typing loop driven by setTimeout in an effect; lint rule `react-hooks/set-state-in-effect` forbids synchronous setState in the effect body, so all state changes go through timeout callbacks.
+- `TerminalHero.tsx` — hero is a fake terminal that types its `entries` script sequentially (state machine: `stage` = current entry, `typed` = chars typed). Lint rule `react-hooks/set-state-in-effect` forbids synchronous setState in effect bodies — all state changes go through timeout/rAF callbacks. Checks `prefers-reduced-motion` via `matchMedia` and renders everything instantly when set.
+
+**Page chrome components** (matveyan.com-inspired structure):
+- `BootLoader.tsx` — fullscreen boot screen with progress %, then split-panel reveal; phase state machine (`loading → reveal → done`), unmounts at `done`, locks body scroll while visible, skipped entirely under reduced motion.
+- `HudFrame.tsx` — fixed viewport HUD (corner `+` marks, left scroll-progress rail, bottom-right cursor/scroll/time debug readout); pure listeners, `display: none` under 720px.
+- `.plus-corners` CSS class / `.btn::after` — the `+` corner-mark motif, drawn via the `--plus-icon` data-URI variable in `:root`; apply `.plus-corners` to any new framed element (must NOT have `overflow: hidden` — apply to a wrapper instead, e.g. `Reveal`'s `className` prop, since `.term` and `.project-card` clip).
+- `.wordmark` — giant outlined "MARANGOZ" before the footer, stroke-only via `-webkit-text-stroke`.
 
 **Every animation must be covered by the `prefers-reduced-motion` block** at the bottom of `index.css`. When adding an animation, add its reset there too.
 

@@ -6,16 +6,13 @@ import { Section } from "./Section";
 function ProjectCard({ project }: { project: Project }) {
   return (
     <article className="project-card">
+      <ul className="tag-row tag-row-sm">
+        {project.stack.slice(0, 3).map((tech) => (
+          <li key={tech}>{tech}</li>
+        ))}
+      </ul>
       <div className="project-head">
-        <h3>
-          {project.repoUrl ? (
-            <a href={project.repoUrl} target="_blank" rel="noreferrer">
-              {project.name}
-            </a>
-          ) : (
-            project.name
-          )}
-        </h3>
+        <h3>{project.name}</h3>
         <span className="project-period">{project.period}</span>
       </div>
       {project.role && <p className="project-role">{project.role}</p>}
@@ -31,11 +28,16 @@ function ProjectCard({ project }: { project: Project }) {
         ))}
       </div>
       {project.repoUrl && (
-        <p className="project-links">
-          <a href={project.repoUrl} target="_blank" rel="noreferrer">
-            source →
+        <div className="project-links">
+          <a
+            className="btn"
+            href={project.repoUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            view source
           </a>
-        </p>
+        </div>
       )}
     </article>
   );
@@ -46,7 +48,7 @@ export function Projects() {
     <Section id="projects" title="/projects">
       <div className="project-list">
         {projects.map((project, i) => (
-          <Reveal key={project.id} delay={i * 130}>
+          <Reveal key={project.id} delay={i * 130} className="plus-corners">
             <ProjectCard project={project} />
           </Reveal>
         ))}
