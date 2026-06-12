@@ -26,8 +26,11 @@ No test suite exists.
 **Padding convention:** `.container` owns horizontal padding only (`padding-left`/`padding-right`, never the `padding` shorthand). Elements that combine `container` with another class (`.hero`, `.footer`) set vertical padding only, also via longhand. Using the `padding` shorthand on either side of this split silently zeroes the other axis — this caused real bugs.
 
 **Animation system is dependency-free** and split across files that must stay in sync:
-- `src/hooks/useReveal.ts` — IntersectionObserver hook; adds `is-visible` class on scroll into view.
-- `src/components/Reveal.tsx` — wrapper using the hook; accepts `delay` (ms) for stagger.
+- `src/hooks/useReveal.ts` — IntersectionObserver hook; toggles `is-visible` as the element enters/leaves the viewport so animations replay on every pass (both scroll directions). Class is removed only when fully offscreen — keep that hysteresis (`threshold: [0, 0.15]`) or visible elements will flicker.
+- `src/components/Reveal.tsx` — wrapper using the hook; accepts `delay` (ms) for stagger and `className` (used to attach `plus-corners` to card wrappers).
+- `src/components/MotionText.tsx` — masked word-by-word text reveal (also driven by `useReveal`); takes `as`, `delay`, `stagger`. Children must be a plain string.
+- `src/hooks/useScrollExit.ts` — hero fade/slide-out tied to scroll position; mutates style in rAF, no re-renders.
+- `src/hooks/useSmoothScroll.ts` — Lenis inertia scrolling (the only runtime dependency besides React); anchors offset by the 56px nav. Not initialized under `prefers-reduced-motion`, where native scrolling + `scroll-margin-top` take over.
 - `index.css` couples to it: `.reveal.is-visible` triggers not only the wrapper fade-up but also descendant animations (`.section-title::after` underline grow, `.skills-row` slide-in). Hero load animations use the `.fade-up` class with a `--d` CSS variable for stagger delay, set inline in `Hero.tsx`.
 - `TerminalHero.tsx` — hero is a fake terminal that types its `entries` script sequentially (state machine: `stage` = current entry, `typed` = chars typed). Lint rule `react-hooks/set-state-in-effect` forbids synchronous setState in effect bodies — all state changes go through timeout/rAF callbacks. Checks `prefers-reduced-motion` via `matchMedia` and renders everything instantly when set.
 
