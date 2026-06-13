@@ -10,6 +10,7 @@ const links = [
 
 export function Nav() {
   const [active, setActive] = useState("");
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
@@ -34,10 +35,26 @@ export function Nav() {
           ~/marangoz
           <span className="logo-caret" aria-hidden="true"></span>
         </a>
-        <ul className="nav-links">
+        <button
+          type="button"
+          className={`nav-toggle${open ? " open" : ""}`}
+          aria-expanded={open}
+          aria-controls="nav-menu"
+          aria-label={open ? "Close menu" : "Open menu"}
+          onClick={() => setOpen((o) => !o)}
+        >
+          <span className="bar" aria-hidden="true" />
+          <span className="bar" aria-hidden="true" />
+          <span className="bar" aria-hidden="true" />
+        </button>
+        <ul id="nav-menu" className={`nav-links${open ? " open" : ""}`}>
           {links.map(({ href, label, idx }) => (
             <li key={href}>
-              <a href={href} className={active === href ? "active" : ""}>
+              <a
+                href={href}
+                className={active === href ? "active" : ""}
+                onClick={() => setOpen(false)}
+              >
                 <span className="idx">{idx}</span>
                 {label}
               </a>

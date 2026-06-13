@@ -137,6 +137,56 @@ body::before {
   50% { opacity: 0; }
 }
 
+@keyframes menu-down {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  width: 36px;
+  height: 30px;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--border-bright);
+  border-radius: 4px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.nav-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.nav-toggle .bar {
+  width: 16px;
+  height: 2px;
+  background: currentColor;
+  transition:
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.2s ease;
+}
+
+/* bars morph into an X when open */
+.nav-toggle.open .bar:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.nav-toggle.open .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle.open .bar:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
 .nav-links {
   display: flex;
   gap: 26px;
@@ -1024,8 +1074,45 @@ html[data-motion="off"] .scroll-hint .chevron {
 @media (max-width: 720px) {
   .container { padding-left: 20px; padding-right: 20px; }
 
-  .nav-links { gap: 16px; }
+  .nav-toggle { display: inline-flex; }
   .nav-links a .idx { display: none; }
+
+  /* collapsed by default; .open drops an absolute panel below the bar
+     so the 60px nav row never changes height */
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 0;
+    padding: 6px 20px 12px;
+    background: rgba(10, 12, 16, 0.97);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-links.open {
+    display: flex;
+    animation: menu-down 0.22s ease;
+  }
+
+  .nav-links a {
+    display: block;
+    padding: 10px 0;
+    font-size: 13px;
+  }
+
+  .nav-links a::before {
+    content: "> ";
+    color: var(--accent);
+  }
+
+  .nav-links a::after {
+    display: none;
+  }
 
   .section { padding-top: 64px; padding-bottom: 64px; }
   .sec-head { margin-bottom: 32px; }
@@ -1061,4 +1148,7 @@ html[data-motion="off"] .scroll-hint .chevron {
   }
 
   .project-card:hover, .stack-tags span:hover { transform: none; }
+
+  .nav-links.open { animation: none; }
+  .nav-toggle .bar { transition: none; }
 }
