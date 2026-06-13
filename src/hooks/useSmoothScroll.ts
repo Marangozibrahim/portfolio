@@ -3,9 +3,10 @@ import { useEffect } from "react";
 import "lenis/dist/lenis.css";
 
 /**
- * Inertia smooth-scrolling via Lenis. Anchor links scroll smoothly
- * with an offset for the 56px sticky nav. Skipped entirely under
- * prefers-reduced-motion (native scrolling is used instead).
+ * Inertia smooth-scrolling via Lenis. Anchor links land under the sticky
+ * nav via each section's `scroll-margin-top` (which Lenis honors) — no extra
+ * anchor offset, or the two stack into a redundant gap. Skipped entirely
+ * under prefers-reduced-motion (native scrolling is used instead).
  */
 export function useSmoothScroll() {
   useEffect(() => {
@@ -13,7 +14,7 @@ export function useSmoothScroll() {
 
     const lenis = new Lenis({
       lerp: 0.1,
-      anchors: { offset: -56 },
+      anchors: true,
     });
 
     let raf = 0;
