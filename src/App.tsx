@@ -16,7 +16,7 @@ export default function App() {
 
   return (
     <>
-      <BackgroundCanvas scene="network" />
+      <BackgroundCanvas />
       <BootLoader />
       <HudFrame />
       <Nav />
