@@ -37,10 +37,6 @@ export function Hero() {
           <TerminalHero />
         </div>
       </div>
-
-      <p className="scroll-hint">
-        <span className="chevron" aria-hidden="true">▾</span>scroll
-      </p>
     </header>
   );
 }
