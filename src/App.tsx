@@ -1,3 +1,4 @@
+import { BackgroundCanvas } from "./components/BackgroundCanvas";
 import { BootLoader } from "./components/BootLoader";
 import { Contact } from "./components/Contact";
 import { Experience } from "./components/Experience";
@@ -15,6 +16,7 @@ export default function App() {
 
   return (
     <>
+      <BackgroundCanvas scene="network" />
       <BootLoader />
       <HudFrame />
       <Nav />

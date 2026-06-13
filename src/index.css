@@ -8,9 +8,9 @@
 :root {
   --plus-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='5' viewBox='0 0 5 5'%3E%3Cpath d='M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z' fill='%23454f5b'/%3E%3C/svg%3E");
 
-  --bg: #0a0c10;
-  --bg-raised: #10141a;
-  --bg-inset: #0d1015;
+  --bg: #050709;
+  --bg-raised: #0a0d12;
+  --bg-inset: #080a0e;
   --border: #1d242d;
   --border-bright: #2e3742;
 
@@ -52,8 +52,6 @@ html {
 
 body {
   background-color: var(--bg);
-  background-image: radial-gradient(var(--border) 1px, transparent 1px);
-  background-size: 28px 28px;
   color: var(--text);
   font-family: var(--font-mono);
   font-size: 15px;
@@ -61,8 +59,13 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-html[data-grid="off"] body {
-  background-image: none;
+/* ---------- animated canvas background ---------- */
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  display: block;
 }
 
 ::selection {
