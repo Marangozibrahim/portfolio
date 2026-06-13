@@ -7,6 +7,7 @@ export const profile: Profile = {
     "I build the parts of the backend that can't fail — secure auth flows, clean architecture, and APIs that hold up under load.",
   email: "marangozibrahim49@gmail.com",
   github: "https://github.com/Marangozibrahim",
+  linkedin: "https://www.linkedin.com/in/halil-ibrahim-marangoz-566bb4193",
   location: "Izmir, Turkey",
   education: {
     school: "Izmir Bakircay University",

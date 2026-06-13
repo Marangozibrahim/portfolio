@@ -4,6 +4,7 @@ export interface Profile {
   tagline: string;
   email: string;
   github: string;
+  linkedin: string;
   location: string;
   education: {
     school: string;

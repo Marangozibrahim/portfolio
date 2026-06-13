@@ -5,7 +5,7 @@ export const projects: Project[] = [
     id: "user-auth-api",
     name: "User Auth API",
     period: "Nov 2025 — Mar 2026",
-    repoUrl: "https://github.com/Marangozibrahim",
+    repoUrl: "https://github.com/Marangozibrahim/user-auth-api",
     summary:
       "Secure, scalable authentication backend with async I/O end to end.",
     highlights: [
@@ -27,7 +27,7 @@ export const projects: Project[] = [
     id: "library-management-api",
     name: "Library Management API",
     period: "May 2025 — Sep 2025",
-    repoUrl: "https://github.com/Marangozibrahim",
+    repoUrl: "https://github.com/Marangozibrahim/LibraryManagementAPI",
     summary:
       "RESTful CRUD API built on CQRS and Onion Architecture with full test coverage.",
     highlights: [
@@ -42,6 +42,7 @@ export const projects: Project[] = [
     id: "geolocation-market-analysis",
     name: "Geolocation Market Analysis",
     period: "Feb 2025 — Apr 2025",
+    repoUrl: "https://github.com/Marangozibrahim/GeolocationMarketAnalysis",
     role: "Backend Developer · team project",
     summary:
       "Backend for an AI-powered tool that scores retail locations by market profitability.",

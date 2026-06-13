@@ -17,6 +17,9 @@ export function Contact() {
           <a className="btn" href={profile.github} target="_blank" rel="noreferrer">
             github ↗
           </a>
+          <a className="btn" href={profile.linkedin} target="_blank" rel="noreferrer">
+            linkedin ↗
+          </a>
         </div>
       </Reveal>
     </Section>

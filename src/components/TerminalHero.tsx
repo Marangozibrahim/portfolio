@@ -9,7 +9,7 @@ import { createPortal } from "react-dom";
 import { profile } from "../data/profile";
 import { skills } from "../data/skills";
 import { projects } from "../data/projects";
-import sections from "../data/sections.json";
+import sections from "../data/sections";
 
 const TYPE_MS = 52;
 const OUT_DELAY_MS = 200;
@@ -132,11 +132,14 @@ const COMMANDS: Record<string, Cmd> = {
     run: () => (
       <div className="term-grid">
         <p>
-          <span className="k">email </span>
+          <span className="k">email   </span>
           {profile.email}
         </p>
         <p>
-          <span className="k">github</span> {profile.github}
+          <span className="k">github  </span> {profile.github}
+        </p>
+        <p>
+          <span className="k">linkedin</span> {profile.linkedin}
         </p>
       </div>
     ),
@@ -159,6 +162,17 @@ const COMMANDS: Record<string, Cmd> = {
       return (
         <>
           opening <span className="k">{profile.github}</span> ↗
+        </>
+      );
+    },
+  },
+  linkedin: {
+    desc: "open linkedin profile",
+    run: () => {
+      window.open(profile.linkedin, "_blank", "noreferrer");
+      return (
+        <>
+          opening <span className="k">{profile.linkedin}</span> ↗
         </>
       );
     },
