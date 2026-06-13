@@ -604,6 +604,14 @@ body::before {
   display: inline-block;
   white-space: pre;
 }
+.term-json {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  color: var(--text-dim);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
 
 /* inline terminal: clickable to expand */
 .term-clickable {

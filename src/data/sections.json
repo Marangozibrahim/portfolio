@@ -1,0 +1,56 @@
+{
+  "about": {
+    "name": "Halil Ibrahim Marangoz",
+    "role": "Backend Engineer",
+    "location": "Izmir, Turkey",
+    "focus": ["secure auth flows", "clean architecture", "APIs under load"],
+    "open_to_work": true
+  },
+  "projects": [
+    {
+      "name": "User Auth API",
+      "period": "Nov 2025 — Mar 2026",
+      "description": "Secure, scalable authentication backend with async I/O end to end.",
+      "stack": ["FastAPI", "PostgreSQL", "Redis", "Celery", "Docker"]
+    },
+    {
+      "name": "Library Management API",
+      "period": "May 2025 — Sep 2025",
+      "description": "RESTful CRUD API built on CQRS and Onion Architecture with full test coverage.",
+      "stack": ["ASP.NET Core", "EF Core", "MS SQL", "MediatR"]
+    },
+    {
+      "name": "Geolocation Market Analysis",
+      "period": "Feb 2025 — Apr 2025",
+      "description": "Backend for an AI-powered tool that scores retail locations by market profitability.",
+      "stack": [".NET Core", "EF Core", "MS SQL"]
+    }
+  ],
+  "skills": {
+    "languages": ["Python", "C#", "SQL", "JavaScript"],
+    "frameworks": ["FastAPI", ".NET", "EF Core", "SQLAlchemy", "Celery"],
+    "databases": ["PostgreSQL", "MS SQL", "MongoDB", "Redis"],
+    "cloud_devops": ["AWS", "Docker", "Git"]
+  },
+  "experience": {
+    "internship": {
+      "title": "Software Development Intern",
+      "company": "Izmir Bakircay University",
+      "period": "Feb 2025 — May 2025",
+      "highlights": [
+        "Built backend infrastructure for two AI-driven apps in a 6-person team",
+        "Led key backend components with .NET Core, EF Core, and MS SQL",
+        "Applied JWT authentication and Onion Architecture across services"
+      ]
+    },
+    "education": {
+      "school": "Izmir Bakircay University",
+      "degree": "B.Sc. Computer Engineering",
+      "graduated": "May 2025"
+    }
+  },
+  "contact": {
+    "email": "marangozibrahim49@gmail.com",
+    "github": "https://github.com/Marangozibrahim"
+  }
+}

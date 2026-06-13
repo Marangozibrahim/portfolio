@@ -9,6 +9,7 @@ import { createPortal } from "react-dom";
 import { profile } from "../data/profile";
 import { skills } from "../data/skills";
 import { projects } from "../data/projects";
+import sections from "../data/sections.json";
 
 const TYPE_MS = 52;
 const OUT_DELAY_MS = 200;
@@ -56,6 +57,9 @@ type CmdResult = ReactNode | Control;
 const isControl = (r: CmdResult): r is Control =>
   typeof r === "object" && r !== null && ("clear" in r || "close" in r);
 
+// virtual files (src/data/sections.json) — `ls` lists, `cat` prints
+const FILES = Object.keys(sections) as (keyof typeof sections)[];
+
 interface Cmd {
   desc: string;
   run: (args: string[]) => CmdResult;
@@ -101,10 +105,6 @@ const COMMANDS: Record<string, Cmd> = {
       </div>
     ),
   },
-  stack: {
-    desc: "core stack, short",
-    run: () => <>python · fastapi · c#/.net · postgresql · redis · docker</>,
-  },
   projects: {
     desc: "list projects",
     run: () => (
@@ -115,34 +115,8 @@ const COMMANDS: Record<string, Cmd> = {
             <span className="term-faint">{p.period}</span>
           </p>
         ))}
-        <p className="term-faint">→ open &lt;name&gt; for details</p>
       </div>
     ),
-  },
-  open: {
-    desc: "open <project> details",
-    run: (args) => {
-      const id = args[0];
-      if (!id) return <span className="term-err">usage: open &lt;project&gt;</span>;
-      const p = projects.find((x) => x.id === id || x.id.startsWith(id));
-      if (!p)
-        return <span className="term-err">no project: {id}</span>;
-      return (
-        <div className="term-grid">
-          <p>
-            <span className="k">{p.name}</span>{" "}
-            <span className="term-faint">— {p.period}</span>
-          </p>
-          <p>{p.summary}</p>
-          {p.highlights.map((h, i) => (
-            <p key={i} className="term-dim">
-              · {h}
-            </p>
-          ))}
-          <p className="ok">{p.stack.join(" · ")}</p>
-        </div>
-      );
-    },
   },
   status: {
     desc: "availability",
@@ -199,24 +173,30 @@ const COMMANDS: Record<string, Cmd> = {
     ),
   },
   ls: {
-    desc: "list sections",
-    run: () => <>about/ skills/ projects/ contact/ resume.pdf</>,
+    desc: "list files",
+    run: () => <>{FILES.join("  ")}</>,
   },
-  echo: {
-    desc: "print text",
-    run: (args) => <>{args.join(" ")}</>,
-  },
-  date: {
-    desc: "current time",
-    run: () => <>{new Date().toString()}</>,
-  },
-  sudo: {
-    desc: "nice try",
-    run: () => (
-      <span className="term-err">
-        marangoz is not in the sudoers file. this incident will be reported.
-      </span>
-    ),
+  cat: {
+    desc: "print <file> contents",
+    run: (args) => {
+      const arg = args[0];
+      if (!arg)
+        return (
+          <span className="term-err">
+            usage: cat &lt;file&gt; — {FILES.join(" · ")}
+          </span>
+        );
+      const key = arg as keyof typeof sections;
+      if (!FILES.includes(key))
+        return (
+          <span className="term-err">
+            cat: {arg}: no such file. try {FILES.join(" · ")}
+          </span>
+        );
+      return (
+        <pre className="term-json">{JSON.stringify(sections[key], null, 2)}</pre>
+      );
+    },
   },
   clear: {
     desc: "clear the screen",
@@ -356,6 +336,37 @@ export function TerminalHero() {
   }, []);
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Tab") {
+      e.preventDefault();
+      const [name, ...rest] = input.split(/\s+/);
+      // completing the command token, or `cat`/`ls`'s file argument
+      const pool =
+        rest.length === 0
+          ? Object.keys(COMMANDS)
+          : name === "cat" || name === "ls"
+            ? [...FILES]
+            : [];
+      const frag = rest.length === 0 ? name : rest[rest.length - 1];
+      const hits = pool.filter((c) => c.startsWith(frag));
+
+      if (hits.length === 1) {
+        setInput(rest.length === 0 ? `${hits[0]} ` : `${name} ${hits[0]} `);
+      } else if (hits.length > 1) {
+        // extend to the longest common prefix, then echo the options
+        const lcp = hits.reduce((a, b) => {
+          let i = 0;
+          while (i < a.length && a[i] === b[i]) i++;
+          return a.slice(0, i);
+        });
+        setInput(rest.length === 0 ? lcp : `${name} ${lcp}`);
+        setHistory((h) => [
+          ...h,
+          { id: lineId++, cmd: input, out: <>{hits.join("  ")}</> },
+        ]);
+      }
+      return;
+    }
+
     if (e.key === "Enter") {
       exec(input);
       setInput("");
