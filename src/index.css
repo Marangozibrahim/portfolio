@@ -701,7 +701,9 @@ body::before {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
   scroll-behavior: smooth;
+  cursor: text;
 }
 /* scanline / CRT shimmer */
 .term-full-scan {

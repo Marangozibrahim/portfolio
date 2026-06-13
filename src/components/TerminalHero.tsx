@@ -441,7 +441,20 @@ export function TerminalHero() {
           role="dialog"
           aria-modal="true"
           aria-label="Interactive terminal"
-          onMouseDown={() => inputRef.current?.focus()}
+          data-lenis-prevent
+          onMouseDown={(e) => {
+            // click on the backdrop (outside the window) closes
+            if (e.target === e.currentTarget) {
+              setFullscreen(false);
+              return;
+            }
+            // click anywhere inside jumps to the input. preventDefault keeps
+            // the click from stealing focus away to the (non-focusable) target
+            if (e.target !== inputRef.current) {
+              e.preventDefault();
+              inputRef.current?.focus();
+            }
+          }}
         >
           <div className="term-full-scan" aria-hidden="true" />
           <div className="term-full-inner">
