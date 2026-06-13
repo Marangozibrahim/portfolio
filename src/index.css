@@ -48,6 +48,11 @@ html {
   /* guard: nothing bleeds past the screen edges at any resolution */
   overflow-x: hidden;
   max-width: 100%;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
 }
 
 body {
