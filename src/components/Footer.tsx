@@ -21,7 +21,7 @@ export function Footer() {
       </div>
       <footer className="footer container">
         <span>© {new Date().getFullYear()} {profile.name}</span>
-        <span>{profile.location} — UTC+3</span>
+        <span>{profile.location}</span>
       </footer>
     </>
   );
