@@ -505,7 +505,10 @@ body::before {
 /* ---------- sections ---------- */
 
 .section {
-  padding: 96px 0;
+  /* longhand only — `.section.container` shares this element; the padding
+     shorthand would zero the container's left/right gutters */
+  padding-top: 96px;
+  padding-bottom: 96px;
   scroll-margin-top: 60px;
 }
 
@@ -1024,7 +1027,7 @@ html[data-motion="off"] .scroll-hint .chevron {
   .nav-links { gap: 16px; }
   .nav-links a .idx { display: none; }
 
-  .section { padding: 64px 0; }
+  .section { padding-top: 64px; padding-bottom: 64px; }
   .sec-head { margin-bottom: 32px; }
 
   .project-card { padding: 22px 18px; }
