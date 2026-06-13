@@ -33,7 +33,6 @@ export function Nav() {
       <div className="container nav-inner">
         <a className="nav-logo" href="#top">
           ~/marangoz
-          <span className="logo-caret" aria-hidden="true"></span>
         </a>
         <button
           type="button"

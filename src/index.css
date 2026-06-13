@@ -131,16 +131,6 @@ body::before {
   letter-spacing: 0.02em;
 }
 
-.logo-caret {
-  display: inline-block;
-  width: 8px;
-  height: 14px;
-  margin-left: 5px;
-  background: var(--accent);
-  vertical-align: -2px;
-  animation: blink 1.1s steps(1) infinite;
-}
-
 @keyframes blink {
   50% {
     opacity: 0;
@@ -730,6 +720,11 @@ body::before {
 .term-inputline {
   display: flex;
   align-items: center;
+  margin-top: 16px;
+}
+/* flex trims the prompt span's trailing space — restore it */
+.term-inputline .term-prompt {
+  margin-right: 0.6em;
 }
 .term-input {
   flex: 1 1 auto;
@@ -740,11 +735,8 @@ body::before {
   background: transparent;
   border: none;
   outline: none;
-  caret-color: transparent;
+  caret-color: var(--accent);
   padding: 0;
-}
-.term-inputline .caret {
-  margin-left: -3px;
 }
 
 @keyframes term-overlay-in {
@@ -1454,7 +1446,6 @@ html[data-motion="off"] .hero-status .dot {
   }
 
   .caret,
-  .logo-caret,
   .hero-status .dot {
     animation: none;
   }

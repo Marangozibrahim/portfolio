@@ -486,7 +486,6 @@ export function TerminalHero() {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={onKeyDown}
                 />
-                <span className="caret" aria-hidden="true"></span>
               </p>
             </div>
           </div>
