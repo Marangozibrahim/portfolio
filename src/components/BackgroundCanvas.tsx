@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 
 /**
  * Animated canvas background — network scene.
- * Nodes drift and connect when close; depth-based parallax on scroll.
+ * Click: repulsion burst + expanding shockwave ring.
  * Accent color read live from --accent-rgb. Respects prefers-reduced-motion.
  */
 export function BackgroundCanvas() {
@@ -34,6 +34,12 @@ export function BackgroundCanvas() {
     };
     let nodes: Node[] = [];
 
+    // mouse state
+    let mouse = { x: 0, y: 0 };
+
+    type Wave = { x: number; y: number; r: number; maxR: number };
+    let waves: Wave[] = [];
+
     function initNodes() {
       const count = Math.round(Math.min(110, (W * H) / 16000));
       nodes = Array.from({ length: count }, () => {
@@ -52,17 +58,41 @@ export function BackgroundCanvas() {
       });
     }
 
+    function applyRepulsion(mx: number, my: number) {
+      const radius = 180;
+      const strength = 1.2; // subtle — low impulse
+      for (const n of nodes) {
+        const dx = n.x - mx;
+        const dy = n.y - my;
+        const d = Math.hypot(dx, dy);
+        if (d < radius && d > 0) {
+          const force = (1 - d / radius) * strength * n.z;
+          n.vx += (dx / d) * force;
+          n.vy += (dy / d) * force;
+        }
+      }
+    }
+
     function draw(dt: number) {
       ctx!.clearRect(0, 0, W, H);
       const link = 150;
       const sy = window.scrollY || 0;
 
       for (const n of nodes) {
+        // soft speed cap so nodes never fly off screen
+        const speed = Math.hypot(n.vx, n.vy);
+        const maxSpeed = 2.5;
+        if (speed > maxSpeed) {
+          n.vx = (n.vx / speed) * maxSpeed;
+          n.vy = (n.vy / speed) * maxSpeed;
+        }
+
         n.x += n.vx * dt;
         n.y += n.vy * dt;
         if (n.x < -20) n.x = W + 20; else if (n.x > W + 20) n.x = -20;
         if (n.y < -20) n.y = H + 20; else if (n.y > H + 20) n.y = -20;
         n.pulse += 0.02 * dt;
+
         // depth-based parallax: near nodes shift more than far ones
         const par = 0.05 + 0.3 * n.z;
         let dy = (n.y - sy * par) % H;
@@ -93,6 +123,20 @@ export function BackgroundCanvas() {
         ctx!.beginPath();
         ctx!.arc(n._x, n._y, n.r, 0, Math.PI * 2);
         ctx!.fill();
+      }
+
+      // shockwave rings
+      const waveSpeed = 1.8;
+      waves = waves.filter((w) => w.r < w.maxR);
+      for (const w of waves) {
+        w.r += waveSpeed * dt;
+        const progress = w.r / w.maxR;          // 0 → 1
+        const alpha = (1 - progress) * 0.18;    // fades out as it expands
+        ctx!.strokeStyle = rgba(alpha);
+        ctx!.lineWidth = 1.5 * (1 - progress * 0.6);
+        ctx!.beginPath();
+        ctx!.arc(w.x, w.y, w.r, 0, Math.PI * 2);
+        ctx!.stroke();
       }
     }
 
@@ -126,7 +170,6 @@ export function BackgroundCanvas() {
       raf = requestAnimationFrame(frame);
     }
 
-    // re-read accent when CSS variable changes
     const observer = new MutationObserver(() => { readAccent(); });
     observer.observe(root, { attributes: true, attributeFilter: ["style"] });
 
@@ -152,6 +195,19 @@ export function BackgroundCanvas() {
     };
     document.addEventListener("visibilitychange", onVisibility);
 
+    const onMouseMove = (e: MouseEvent) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    };
+    const onMouseDown = (e: MouseEvent) => {
+      if (motionOff()) return;
+      applyRepulsion(e.clientX, e.clientY);
+      waves.push({ x: e.clientX, y: e.clientY, r: 0, maxR: 140 });
+    };
+
+    window.addEventListener("mousemove", onMouseMove, { passive: true });
+    window.addEventListener("mousedown", onMouseDown);
+
     readAccent();
     resize();
     start();
@@ -160,6 +216,8 @@ export function BackgroundCanvas() {
       observer.disconnect();
       window.removeEventListener("resize", onResize);
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mousedown", onMouseDown);
       document.removeEventListener("visibilitychange", onVisibility);
       clearTimeout(resizeT);
       if (raf !== null) cancelAnimationFrame(raf);
