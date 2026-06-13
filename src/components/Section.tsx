@@ -3,21 +3,24 @@ import { Reveal } from "./Reveal";
 
 interface SectionProps {
   id: string;
+  num: string;
   title: string;
   children: ReactNode;
 }
 
-export function Section({ id, title, children }: SectionProps) {
+export function Section({ id, num, title, children }: SectionProps) {
   return (
-    <section id={id} className="section">
-      <div className="container">
-        <Reveal>
-          <h2 className="section-title">
-            <span className="path">{title}</span>
+    <section className="section container" id={id}>
+      <Reveal>
+        <header className="sec-head">
+          <span className="sec-num">{num}</span>
+          <h2 className="sec-title">
+            <span className="path">/{title}</span>
           </h2>
-        </Reveal>
-        {children}
-      </div>
+          <span className="sec-rule" aria-hidden="true"></span>
+        </header>
+      </Reveal>
+      {children}
     </section>
   );
 }

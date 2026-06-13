@@ -1,107 +1,109 @@
-import { useEffect, useState } from "react";
-import type { ReactNode } from "react";
-import { profile } from "../data/profile";
+import { useEffect, useState, type ReactNode } from "react";
 
-interface TermEntry {
+const TYPE_MS = 52;
+const OUT_DELAY_MS = 200;
+const NEXT_DELAY_MS = 820;
+const START_DELAY_MS = 1100; // wait for boot loader reveal
+
+interface Entry {
   cmd: string;
-  output: ReactNode;
+  out: ReactNode;
 }
 
-const entries: TermEntry[] = [
+const entries: Entry[] = [
   {
     cmd: "whoami",
-    output: (
+    out: (
       <>
-        <p className="term-name">
-          {profile.name.split(" ").slice(0, -1).join(" ")}{" "}
-          <span className="accent">{profile.name.split(" ").at(-1)}</span>
-        </p>
-        <p className="term-sub">
-          {profile.role.toLowerCase()} · {profile.location.toLowerCase()}
-        </p>
+        <span className="k">halil ibrahim marangoz</span> — backend engineer
       </>
     ),
   },
   {
-    cmd: "cat role.txt",
-    output: <p className="term-out-text">{profile.tagline}</p>,
+    cmd: "cat stack.txt",
+    out: <>python · fastapi · c#/.net · postgresql · redis · docker</>,
   },
   {
     cmd: "status --check",
-    output: (
-      <p className="term-status">
-        <span className="dot" aria-hidden="true" />
-        open to work
-      </p>
+    out: (
+      <>
+        <span className="ok">● available</span> — backend / full-stack roles,
+        utc+3
+      </>
     ),
   },
 ];
 
-const TYPE_MS = 55;
-const OUTPUT_PAUSE_MS = 450;
-
-function prefersReducedMotion() {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
 export function TerminalHero() {
-  // stage n = typing entry n's command; output shows once fully typed
-  const [stage, setStage] = useState(() =>
-    prefersReducedMotion() ? entries.length : 0,
-  );
-  const [typed, setTyped] = useState(() =>
-    prefersReducedMotion() ? Infinity : 0,
-  );
+  const reduced =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const [started, setStarted] = useState(reduced);
+  const [entry, setEntry] = useState(reduced ? entries.length : 0);
+  const [chars, setChars] = useState(0);
+  const [showOut, setShowOut] = useState(false);
 
   useEffect(() => {
-    if (stage >= entries.length) return;
-    const cmd = entries[stage].cmd;
+    if (started) return;
+    const t = setTimeout(() => setStarted(true), START_DELAY_MS);
+    return () => clearTimeout(t);
+  }, [started]);
 
-    if (typed < cmd.length) {
-      const t = setTimeout(() => setTyped((c) => c + 1), TYPE_MS);
+  useEffect(() => {
+    if (!started || entry >= entries.length) return;
+    const full = entries[entry].cmd;
+
+    if (chars < full.length) {
+      const t = setTimeout(() => setChars((c) => c + 1), TYPE_MS);
       return () => clearTimeout(t);
     }
 
-    const t = setTimeout(() => {
-      setStage((s) => s + 1);
-      setTyped(0);
-    }, OUTPUT_PAUSE_MS);
-    return () => clearTimeout(t);
-  }, [stage, typed]);
+    const t1 = setTimeout(() => setShowOut(true), OUT_DELAY_MS);
+    const t2 = setTimeout(() => {
+      setEntry((e) => e + 1);
+      setChars(0);
+      setShowOut(false);
+    }, NEXT_DELAY_MS);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [started, entry, chars]);
 
-  const finished = stage >= entries.length;
+  const allDone = entry >= entries.length;
 
   return (
     <div className="term" role="group" aria-label="Introduction terminal">
       <div className="term-bar" aria-hidden="true">
-        <span className="term-dot" />
-        <span className="term-dot" />
-        <span className="term-dot" />
+        <span className="term-dot"></span>
+        <span className="term-dot"></span>
+        <span className="term-dot"></span>
         <span className="term-title">~/marangoz — bash</span>
       </div>
       <div className="term-body">
-        {entries.map((entry, i) => {
-          if (i > stage) return null;
-          const isTyping = i === stage;
-          const cmdText = isTyping ? entry.cmd.slice(0, typed) : entry.cmd;
-          const cmdDone = !isTyping || typed >= entry.cmd.length;
+        {entries.map((e, i) => {
+          if (i > entry) return null;
+          const isCurrent = i === entry;
+          const typed = isCurrent ? e.cmd.slice(0, chars) : e.cmd;
+          const outVisible = !isCurrent || showOut;
           return (
-            <div key={entry.cmd} className="term-entry">
+            <div className="term-entry" key={e.cmd}>
               <p className="term-cmd">
                 <span className="term-prompt">$ </span>
-                {cmdText}
-                {isTyping && !cmdDone && (
-                  <span className="caret" aria-hidden="true" />
+                <span className="cmd-text">{typed}</span>
+                {isCurrent && chars < e.cmd.length && (
+                  <span className="caret" aria-hidden="true"></span>
                 )}
               </p>
-              {cmdDone && <div className="term-output">{entry.output}</div>}
+              {outVisible && <div className="term-output">{e.out}</div>}
             </div>
           );
         })}
-        {finished && (
+        {allDone && (
           <p className="term-cmd">
             <span className="term-prompt">$ </span>
-            <span className="caret" aria-hidden="true" />
+            <span className="caret" aria-hidden="true"></span>
           </p>
         )}
       </div>

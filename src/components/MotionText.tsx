@@ -1,43 +1,39 @@
-import { createElement, type ElementType } from "react";
+import { createElement, type CSSProperties, type ElementType } from "react";
 import { useReveal } from "../hooks/useReveal";
 
 interface MotionTextProps {
-  children: string;
+  text: string;
   as?: ElementType;
   className?: string;
-  /** Base delay in ms before the first word. */
-  delay?: number;
-  /** Stagger per word in ms. */
+  /** ms between each word's entrance */
   stagger?: number;
 }
 
-/**
- * Masked word-by-word reveal on scroll into view.
- * Each word slides up from behind an overflow mask, staggered left to right.
- */
+/** Word-by-word masked rise animation, triggered on reveal. */
 export function MotionText({
-  children,
+  text,
   as = "p",
   className = "",
-  delay = 0,
-  stagger = 28,
+  stagger = 30,
 }: MotionTextProps) {
-  const ref = useReveal<HTMLElement>();
-  const words = children.split(" ");
+  const { ref, visible } = useReveal<HTMLElement>();
+  const words = text.trim().split(/\s+/);
 
   return createElement(
     as,
-    { ref, className: `motion-text ${className}`.trim() },
-    words.map((word, i) => (
-      <span className="mt-mask" key={`${word}-${i}`}>
+    {
+      ref,
+      className: `motion-text${visible ? " is-visible" : ""}${className ? " " + className : ""}`,
+    },
+    words.map((w, i) => (
+      <span className="mt-mask" key={i}>
         <span
           className="mt-word"
-          style={{ transitionDelay: `${delay + i * stagger}ms` }}
+          style={{ "--d": `${i * stagger}ms` } as CSSProperties}
         >
-          {word}
-          {i < words.length - 1 ? " " : ""}
+          {w + (i < words.length - 1 ? " " : "")}
         </span>
       </span>
-    )),
+    ))
   );
 }

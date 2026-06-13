@@ -1,27 +1,21 @@
 import { profile } from "../data/profile";
-import { MotionText } from "./MotionText";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
 
 export function Contact() {
   return (
-    <Section id="contact" title="/contact">
-      <MotionText className="contact-text" stagger={18}>
-        Open to backend and full-stack roles. If you're building something
-        interesting, let's talk.
-      </MotionText>
-      <Reveal delay={150}>
+    <Section id="contact" num="05" title="contact">
+      <Reveal>
+        <p className="contact-text">
+          Open to backend and full-stack roles. If you're building something
+          interesting — or just want to talk systems — my inbox is open.
+        </p>
+        <a className="contact-email" href={`mailto:${profile.email}`}>
+          {profile.email}
+        </a>
         <div className="contact-links">
-          <a className="btn btn-primary" href={`mailto:${profile.email}`}>
-            {profile.email}
-          </a>
-          <a
-            className="btn"
-            href={profile.github}
-            target="_blank"
-            rel="noreferrer"
-          >
-            github
+          <a className="btn" href={profile.github} target="_blank" rel="noreferrer">
+            github ↗
           </a>
         </div>
       </Reveal>

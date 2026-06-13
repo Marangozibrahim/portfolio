@@ -1,64 +1,54 @@
 import { useEffect, useState } from "react";
 
-const LOAD_MS = 1100;
-const REVEAL_MS = 700;
+const BOOT_KEY = "marangoz-boot-shown";
+const TICK_MS = 90;
+const REVEAL_DELAY_MS = 150;
+const DONE_MS = 850;
 
-/** Fullscreen boot screen: progress bar counts up, then panels split open. */
+/** Fullscreen boot screen: progress bar, then split-panel reveal. Once per session. */
 export function BootLoader() {
+  const [skip] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return (
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      sessionStorage.getItem(BOOT_KEY) !== null
+    );
+  });
   const [pct, setPct] = useState(0);
-  const [phase, setPhase] = useState<"loading" | "reveal" | "done">(() =>
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      ? "done"
-      : "loading",
-  );
+  const [reveal, setReveal] = useState(false);
+  const [done, setDone] = useState(skip);
 
   useEffect(() => {
-    if (phase !== "loading") return;
-    const start = performance.now();
-    let raf = 0;
-    const tick = (t: number) => {
-      const p = Math.min(100, Math.round(((t - start) / LOAD_MS) * 100));
-      setPct(p);
-      if (p < 100) {
-        raf = requestAnimationFrame(tick);
-      } else {
-        setPhase("reveal");
-      }
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [phase]);
+    if (skip) return;
+    sessionStorage.setItem(BOOT_KEY, "1");
+    const tick = setInterval(() => {
+      setPct((p) => Math.min(100, p + Math.ceil(Math.random() * 22)));
+    }, TICK_MS);
+    return () => clearInterval(tick);
+  }, [skip]);
 
   useEffect(() => {
-    if (phase !== "reveal") return;
-    const t = setTimeout(() => setPhase("done"), REVEAL_MS);
-    return () => clearTimeout(t);
-  }, [phase]);
-
-  // lock scroll while booting
-  useEffect(() => {
-    if (phase === "done") return;
-    document.body.style.overflow = "hidden";
+    if (skip || pct < 100) return;
+    const t1 = setTimeout(() => setReveal(true), REVEAL_DELAY_MS);
+    const t2 = setTimeout(() => setDone(true), DONE_MS);
     return () => {
-      document.body.style.overflow = "";
+      clearTimeout(t1);
+      clearTimeout(t2);
     };
-  }, [phase]);
+  }, [skip, pct]);
 
-  if (phase === "done") return null;
+  if (done) return null;
 
   return (
-    <div
-      className={`boot${phase === "reveal" ? " boot-reveal" : ""}`}
-      aria-hidden="true"
-    >
-      <div className="boot-panel boot-panel-top" />
-      <div className="boot-panel boot-panel-bottom" />
+    <div className={`boot${reveal ? " reveal" : ""}`} aria-hidden="true">
+      <div className="boot-panel boot-panel-top"></div>
+      <div className="boot-panel boot-panel-bottom"></div>
       <div className="boot-content">
         <span className="boot-logo">~/marangoz</span>
-        <div className="boot-line">
-          <div className="boot-bar" style={{ width: `${pct}%` }} />
-        </div>
-        <span className="boot-pct">{pct}%</span>
+        <span className="boot-line">
+          <span className="boot-bar" style={{ width: `${pct}%` }}></span>
+        </span>
+        <span className="boot-pct">{String(pct).padStart(3, "0")}%</span>
       </div>
     </div>
   );

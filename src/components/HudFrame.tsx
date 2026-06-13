@@ -2,54 +2,48 @@ import { useEffect, useState } from "react";
 
 /**
  * Fixed viewport HUD: corner marks, scroll progress rail,
- * and a debug readout (cursor / scroll / session time).
- * Hidden on mobile via CSS.
+ * and a location/scroll readout. Hidden below 860px via CSS.
  */
 export function HudFrame() {
-  const [scrollPct, setScrollPct] = useState(0);
-  const [cursor, setCursor] = useState({ x: 0, y: 0 });
-  const [time, setTime] = useState(0);
+  const [pct, setPct] = useState(0);
+  const [section, setSection] = useState("~/");
 
   useEffect(() => {
+    const ids = ["#about", "#projects", "#experience", "#skills", "#contact"];
     const onScroll = () => {
-      const max =
-        document.documentElement.scrollHeight - window.innerHeight;
-      setScrollPct(max > 0 ? Math.round((window.scrollY / max) * 100) : 0);
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      setPct(max > 0 ? Math.round((window.scrollY / max) * 100) : 0);
+
+      let current = "~/";
+      for (const id of ids) {
+        const el = document.querySelector(id);
+        if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.4) {
+          current = id;
+        }
+      }
+      setSection(current);
     };
-    const onMove = (e: MouseEvent) => setCursor({ x: e.clientX, y: e.clientY });
-    const timer = setInterval(
-      () => setTime(Math.round(performance.now() / 100) / 10),
-      100,
-    );
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("mousemove", onMove, { passive: true });
     onScroll();
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("mousemove", onMove);
-      clearInterval(timer);
-    };
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
-    <div className="hud" aria-hidden="true">
-      <span className="hud-corner hud-tl">+</span>
-      <span className="hud-corner hud-tr">+</span>
-      <span className="hud-corner hud-bl">+</span>
-      <span className="hud-corner hud-br">+</span>
-      <div className="hud-rail">
-        <div className="hud-rail-fill" style={{ height: `${scrollPct}%` }} />
+    <>
+      <span className="hud-corner hud-tl" aria-hidden="true">+</span>
+      <span className="hud-corner hud-tr" aria-hidden="true">+</span>
+      <span className="hud-corner hud-bl" aria-hidden="true">+</span>
+      <div className="hud-rail" aria-hidden="true">
+        <div className="hud-rail-fill" style={{ height: `${pct}%` }}></div>
       </div>
-      <div className="hud-debug">
-        <div className="hud-debug-col">
-          <div>x: {cursor.x}</div>
-          <div>y: {cursor.y}</div>
-        </div>
-        <div className="hud-debug-col">
-          <div>scroll: {scrollPct}%</div>
-          <div>t: {time.toFixed(1)}s</div>
-        </div>
+      <div className="hud-readout" aria-hidden="true">
+        <span>
+          loc <span className="val">{section}</span>
+        </span>
+        <span>
+          scroll <span className="val">{pct}%</span>
+        </span>
       </div>
-    </div>
+    </>
   );
 }

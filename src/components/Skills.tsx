@@ -4,34 +4,23 @@ import { Section } from "./Section";
 
 export function Skills() {
   return (
-    <Section id="skills" title="/skills">
+    <Section id="skills" num="04" title="skills">
       <Reveal>
-        <div className="skills-block" role="img" aria-label="Skills overview">
-          <div className="brace">{"{"}</div>
+        <div className="skills-grid">
           {skills.map((group, i) => (
             <div
+              className="skill-row"
               key={group.label}
-              className="skills-row"
-              style={{ transitionDelay: `${200 + i * 140}ms` }}
+              style={{ transitionDelay: `${150 + i * 120}ms` }}
             >
-              <span className="skills-key">"{group.label}"</span>
-              <span className="skills-punct">: [</span>
-              <span className="skills-val">
-                {group.items.map((item, j) => (
-                  <span key={item}>
-                    "{item}"
-                    {j < group.items.length - 1 && (
-                      <span className="skills-punct">, </span>
-                    )}
-                  </span>
+              <span className="skill-key">{group.label}</span>
+              <div className="skill-items">
+                {group.items.map((item) => (
+                  <span key={item}>{item}</span>
                 ))}
-              </span>
-              <span className="skills-punct">
-                ]{i < skills.length - 1 ? "," : ""}
-              </span>
+              </div>
             </div>
           ))}
-          <div className="brace">{"}"}</div>
         </div>
       </Reveal>
     </Section>

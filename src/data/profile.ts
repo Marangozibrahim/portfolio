@@ -4,7 +4,7 @@ export const profile: Profile = {
   name: "Halil Ibrahim Marangoz",
   role: "Backend Engineer",
   tagline:
-    "I design and build secure, scalable backend systems — auth flows, clean architecture, and APIs that hold up under load.",
+    "I build the parts of the backend that can't fail — secure auth flows, clean architecture, and APIs that hold up under load.",
   email: "marangozibrahim49@gmail.com",
   github: "https://github.com/Marangozibrahim",
   location: "Izmir, Turkey",
