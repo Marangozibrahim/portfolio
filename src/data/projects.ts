@@ -2,6 +2,29 @@ import type { Project } from "../types";
 
 export const projects: Project[] = [
   {
+    id: "realtime-chat-app",
+    name: "Real-Time Chat App",
+    period: "May 2026 — Jun 2026",
+    repoUrl: "https://github.com/Marangozibrahim/chat-app",
+    summary:
+      "Horizontally-scalable group chat with real-time presence, typing, and read receipts over WebSockets.",
+    highlights: [
+      "Multi-worker WebSocket fan-out via Redis pub/sub — scales to N processes with zero inter-worker coordination",
+      "O(1) presence with automatic stale eviction (Redis HSET + ZSET), WhatsApp-style double-tick read receipts",
+      "Direct-to-S3 uploads via presigned URLs (images, video, PDFs up to 500 MB), cursor-paginated history",
+      "Access + refresh JWTs with single-flight 401 refresh, Redis-backed rate limiting, GitHub Actions CI, EC2 deploy",
+    ],
+    stack: [
+      "FastAPI",
+      "React",
+      "PostgreSQL",
+      "Redis",
+      "WebSockets",
+      "AWS S3",
+      "Docker",
+    ],
+  },
+  {
     id: "user-auth-api",
     name: "User Auth API",
     period: "Nov 2025 — Mar 2026",
