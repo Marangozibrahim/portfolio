@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { pick, useLang } from "../i18n/useLang";
+import { ui } from "../data/ui";
 
 const links = [
   { href: "#about", label: "/about", idx: "01" },
@@ -11,6 +13,7 @@ const links = [
 export function Nav() {
   const [active, setActive] = useState("");
   const [open, setOpen] = useState(false);
+  const { lang, setLang } = useLang();
 
   useEffect(() => {
     const onScroll = () => {
@@ -39,7 +42,7 @@ export function Nav() {
           className={`nav-toggle${open ? " open" : ""}`}
           aria-expanded={open}
           aria-controls="nav-menu"
-          aria-label={open ? "Close menu" : "Open menu"}
+          aria-label={pick(open ? ui.nav.closeMenu : ui.nav.openMenu, lang)}
           onClick={() => setOpen((o) => !o)}
         >
           <span className="bar" aria-hidden="true" />
@@ -60,6 +63,27 @@ export function Nav() {
             </li>
           ))}
         </ul>
+        <div className="nav-lang" role="group" aria-label={pick(ui.nav.langLabel, lang)}>
+          <button
+            type="button"
+            className={lang === "en" ? "active" : ""}
+            aria-pressed={lang === "en"}
+            onClick={() => setLang("en")}
+          >
+            EN
+          </button>
+          <span className="nav-lang-sep" aria-hidden="true">
+            /
+          </span>
+          <button
+            type="button"
+            className={lang === "tr" ? "active" : ""}
+            aria-pressed={lang === "tr"}
+            onClick={() => setLang("tr")}
+          >
+            TR
+          </button>
+        </div>
       </div>
     </nav>
   );

@@ -1,11 +1,17 @@
 import { projects } from "../data/projects";
 import type { Project } from "../types";
+import { useT } from "../i18n/useLang";
+import { ui } from "../data/ui";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
+  const t = useT();
   const num = String(index + 1).padStart(2, "0");
-  const meta = [...project.stack.slice(0, 2), project.role].filter(Boolean);
+  const meta = [
+    ...project.stack.slice(0, 2),
+    project.role ? t(project.role) : undefined,
+  ].filter(Boolean);
 
   return (
     <Reveal>
@@ -30,9 +36,9 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           </h3>
           <span className="project-period">{project.period}</span>
         </div>
-        <p className="project-summary">{project.summary}</p>
+        <p className="project-summary">{t(project.summary)}</p>
         <ul className="project-highlights">
-          {project.highlights.map((h) => (
+          {t(project.highlights).map((h) => (
             <li key={h}>{h}</li>
           ))}
         </ul>
@@ -44,7 +50,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           </div>
           {project.repoUrl && (
             <a className="project-link" href={project.repoUrl} target="_blank" rel="noreferrer">
-              view source →
+              {t(ui.projects.viewSource)}
             </a>
           )}
         </div>

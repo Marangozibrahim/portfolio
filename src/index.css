@@ -136,6 +136,39 @@ body::before {
   letter-spacing: 0.02em;
 }
 
+.nav-lang {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 24px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+.nav-lang button {
+  background: none;
+  border: none;
+  padding: 2px 2px;
+  cursor: pointer;
+  color: var(--text-dim);
+  font: inherit;
+  letter-spacing: inherit;
+  transition: color 0.15s ease;
+}
+
+.nav-lang button:hover {
+  color: var(--text-bright);
+}
+
+.nav-lang button.active {
+  color: var(--accent);
+}
+
+.nav-lang-sep {
+  color: var(--text-dim);
+  opacity: 0.5;
+}
+
 @keyframes blink {
   50% {
     opacity: 0;

@@ -1,17 +1,22 @@
+export type Lang = "en" | "tr";
+
+/** Localized value: one variant per language. */
+export type L<T> = Record<Lang, T>;
+
 export interface Profile {
   name: string;
-  role: string;
-  tagline: string;
+  role: L<string>;
+  tagline: L<string>;
   email: string;
   github: string;
   linkedin: string;
-  location: string;
+  location: L<string>;
   education: {
     school: string;
-    degree: string;
-    graduated: string;
+    degree: L<string>;
+    graduated: L<string>;
   };
-  languages: { name: string; level: string }[];
+  // languages stays UI-agnostic; rendered via ui dict where needed
 }
 
 export interface Project {
@@ -19,17 +24,17 @@ export interface Project {
   name: string;
   period: string;
   repoUrl?: string;
-  role?: string;
-  summary: string;
-  highlights: string[];
+  role?: L<string>;
+  summary: L<string>;
+  highlights: L<string[]>;
   stack: string[];
 }
 
 export interface Experience {
-  title: string;
+  title: L<string>;
   company: string;
   period: string;
-  bullets: string[];
+  bullets: L<string[]>;
 }
 
 export interface SkillGroup {

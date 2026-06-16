@@ -1,8 +1,10 @@
 import type { MouseEvent } from "react";
 import { profile } from "../data/profile";
+import { useT } from "../i18n/useLang";
 import { Reveal } from "./Reveal";
 
 export function Footer() {
+  const t = useT();
   const onMove = (e: MouseEvent<HTMLParagraphElement>) => {
     const el = e.currentTarget;
     const r = el.getBoundingClientRect();
@@ -21,7 +23,7 @@ export function Footer() {
       </div>
       <footer className="footer container">
         <span>© {new Date().getFullYear()} {profile.name}</span>
-        <span>{profile.location}</span>
+        <span>{t(profile.location)}</span>
       </footer>
     </>
   );

@@ -1,15 +1,15 @@
 import { profile } from "../data/profile";
+import { ui } from "../data/ui";
+import { useT } from "../i18n/useLang";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
 
 export function Contact() {
+  const t = useT();
   return (
     <Section id="contact" num="05" title="contact">
       <Reveal>
-        <p className="contact-text">
-          Open to backend and full-stack roles. If you're building something
-          interesting — or just want to talk systems — my inbox is open.
-        </p>
+        <p className="contact-text">{t(ui.contact.text)}</p>
         <a className="contact-email" href={`mailto:${profile.email}`}>
           {profile.email}
         </a>

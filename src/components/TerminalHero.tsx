@@ -1,6 +1,7 @@
 import {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
@@ -9,7 +10,9 @@ import { createPortal } from "react-dom";
 import { profile } from "../data/profile";
 import { skills } from "../data/skills";
 import { projects } from "../data/projects";
-import sections from "../data/sections";
+import { buildSections } from "../data/sections";
+import { pick, useLang } from "../i18n/useLang";
+import type { Lang } from "../types";
 
 const TYPE_MS = 52;
 const OUT_DELAY_MS = 200;
@@ -57,170 +60,182 @@ type CmdResult = ReactNode | Control;
 const isControl = (r: CmdResult): r is Control =>
   typeof r === "object" && r !== null && ("clear" in r || "close" in r);
 
-// virtual files (src/data/sections.json) — `ls` lists, `cat` prints
-const FILES = Object.keys(sections) as (keyof typeof sections)[];
-
 interface Cmd {
   desc: string;
   run: (args: string[]) => CmdResult;
 }
 
-const COMMANDS: Record<string, Cmd> = {
-  help: {
-    desc: "list available commands",
-    run: () => (
-      <div className="term-grid">
-        {Object.entries(COMMANDS).map(([name, c]) => (
-          <p key={name}>
-            <span className="k">{name.padEnd(11)}</span>
-            <span className="term-faint">{c.desc}</span>
-          </p>
-        ))}
-      </div>
-    ),
-  },
-  whoami: {
-    desc: "who is this",
-    run: () => (
-      <>
-        <span className="k">{profile.name.toLowerCase()}</span> — {profile.role.toLowerCase()},{" "}
-        {profile.location.toLowerCase()}
-      </>
-    ),
-  },
-  about: {
-    desc: "short bio",
-    run: () => <>{profile.tagline}</>,
-  },
-  skills: {
-    desc: "tech i work with",
-    run: () => (
-      <div className="term-grid">
-        {skills.map((g) => (
-          <p key={g.label}>
-            <span className="ok">{g.label.padEnd(13)}</span>
-            {g.items.join(" · ")}
-          </p>
-        ))}
-      </div>
-    ),
-  },
-  projects: {
-    desc: "list projects",
-    run: () => (
-      <div className="term-grid">
-        {projects.map((p) => (
-          <p key={p.id}>
-            <span className="k">{p.id.padEnd(28)}</span>
-            <span className="term-faint">{p.period}</span>
-          </p>
-        ))}
-      </div>
-    ),
-  },
-  status: {
-    desc: "availability",
-    run: () => (
-      <>
-        <span className="ok">● available</span> — backend / full-stack roles,
-        utc+3
-      </>
-    ),
-  },
-  contact: {
-    desc: "how to reach me",
-    run: () => (
-      <div className="term-grid">
-        <p>
-          <span className="k">email   </span>
-          {profile.email}
-        </p>
-        <p>
-          <span className="k">github  </span> {profile.github}
-        </p>
-        <p>
-          <span className="k">linkedin</span> {profile.linkedin}
-        </p>
-      </div>
-    ),
-  },
-  email: {
-    desc: "open mail client",
-    run: () => {
-      window.location.href = `mailto:${profile.email}`;
-      return (
-        <>
-          opening mail → <span className="k">{profile.email}</span>
-        </>
-      );
+/**
+ * Builds the command registry for the active language. Content is pulled live
+ * from the localized data layer via `pick(..., lang)`. Command names and the
+ * shell verbs (help/ls/cat) stay English — they're a fixed UNIX-style API.
+ */
+function buildCommands(lang: Lang): Record<string, Cmd> {
+  const sections = buildSections(lang);
+  const FILES = Object.keys(sections) as (keyof typeof sections)[];
+
+  const commands: Record<string, Cmd> = {
+    help: {
+      desc: "list available commands",
+      run: () => (
+        <div className="term-grid">
+          {Object.entries(commands).map(([name, c]) => (
+            <p key={name}>
+              <span className="k">{name.padEnd(11)}</span>
+              <span className="term-faint">{c.desc}</span>
+            </p>
+          ))}
+        </div>
+      ),
     },
-  },
-  github: {
-    desc: "open github profile",
-    run: () => {
-      window.open(profile.github, "_blank", "noreferrer");
-      return (
+    whoami: {
+      desc: "who is this",
+      run: () => (
         <>
-          opening <span className="k">{profile.github}</span> ↗
+          <span className="k">{profile.name.toLowerCase()}</span> —{" "}
+          {pick(profile.role, lang).toLowerCase()},{" "}
+          {pick(profile.location, lang).toLowerCase()}
         </>
-      );
+      ),
     },
-  },
-  linkedin: {
-    desc: "open linkedin profile",
-    run: () => {
-      window.open(profile.linkedin, "_blank", "noreferrer");
-      return (
+    about: {
+      desc: "short bio",
+      run: () => <>{pick(profile.tagline, lang)}</>,
+    },
+    skills: {
+      desc: "tech i work with",
+      run: () => (
+        <div className="term-grid">
+          {skills.map((g) => (
+            <p key={g.label}>
+              <span className="ok">{g.label.padEnd(13)}</span>
+              {g.items.join(" · ")}
+            </p>
+          ))}
+        </div>
+      ),
+    },
+    projects: {
+      desc: "list projects",
+      run: () => (
+        <div className="term-grid">
+          {projects.map((p) => (
+            <p key={p.id}>
+              <span className="k">{p.id.padEnd(28)}</span>
+              <span className="term-faint">{p.period}</span>
+            </p>
+          ))}
+        </div>
+      ),
+    },
+    status: {
+      desc: "availability",
+      run: () => (
         <>
-          opening <span className="k">{profile.linkedin}</span> ↗
+          <span className="ok">● available</span> — backend / full-stack roles,
+          utc+3
         </>
-      );
+      ),
     },
-  },
-  education: {
-    desc: "degree",
-    run: () => (
-      <>
-        <span className="k">{profile.education.degree}</span> —{" "}
-        {profile.education.school}, {profile.education.graduated}
-      </>
-    ),
-  },
-  ls: {
-    desc: "list files",
-    run: () => <>{FILES.join("  ")}</>,
-  },
-  cat: {
-    desc: "print <file> contents",
-    run: (args) => {
-      const arg = args[0];
-      if (!arg)
+    contact: {
+      desc: "how to reach me",
+      run: () => (
+        <div className="term-grid">
+          <p>
+            <span className="k">email   </span>
+            {profile.email}
+          </p>
+          <p>
+            <span className="k">github  </span> {profile.github}
+          </p>
+          <p>
+            <span className="k">linkedin</span> {profile.linkedin}
+          </p>
+        </div>
+      ),
+    },
+    email: {
+      desc: "open mail client",
+      run: () => {
+        window.location.href = `mailto:${profile.email}`;
         return (
-          <span className="term-err">
-            usage: cat &lt;file&gt; — {FILES.join(" · ")}
-          </span>
+          <>
+            opening mail → <span className="k">{profile.email}</span>
+          </>
         );
-      const key = arg as keyof typeof sections;
-      if (!FILES.includes(key))
-        return (
-          <span className="term-err">
-            cat: {arg}: no such file. try {FILES.join(" · ")}
-          </span>
-        );
-      return (
-        <pre className="term-json">{JSON.stringify(sections[key], null, 2)}</pre>
-      );
+      },
     },
-  },
-  clear: {
-    desc: "clear the screen",
-    run: () => ({ clear: true }),
-  },
-  exit: {
-    desc: "close fullscreen",
-    run: () => ({ close: true }),
-  },
-};
+    github: {
+      desc: "open github profile",
+      run: () => {
+        window.open(profile.github, "_blank", "noreferrer");
+        return (
+          <>
+            opening <span className="k">{profile.github}</span> ↗
+          </>
+        );
+      },
+    },
+    linkedin: {
+      desc: "open linkedin profile",
+      run: () => {
+        window.open(profile.linkedin, "_blank", "noreferrer");
+        return (
+          <>
+            opening <span className="k">{profile.linkedin}</span> ↗
+          </>
+        );
+      },
+    },
+    education: {
+      desc: "degree",
+      run: () => (
+        <>
+          <span className="k">{pick(profile.education.degree, lang)}</span> —{" "}
+          {profile.education.school}, {pick(profile.education.graduated, lang)}
+        </>
+      ),
+    },
+    ls: {
+      desc: "list files",
+      run: () => <>{FILES.join("  ")}</>,
+    },
+    cat: {
+      desc: "print <file> contents",
+      run: (args) => {
+        const arg = args[0];
+        if (!arg)
+          return (
+            <span className="term-err">
+              usage: cat &lt;file&gt; — {FILES.join(" · ")}
+            </span>
+          );
+        const key = arg as keyof typeof sections;
+        if (!FILES.includes(key))
+          return (
+            <span className="term-err">
+              cat: {arg}: no such file. try {FILES.join(" · ")}
+            </span>
+          );
+        return (
+          <pre className="term-json">
+            {JSON.stringify(sections[key], null, 2)}
+          </pre>
+        );
+      },
+    },
+    clear: {
+      desc: "clear the screen",
+      run: () => ({ clear: true }),
+    },
+    exit: {
+      desc: "close fullscreen",
+      run: () => ({ close: true }),
+    },
+  };
+
+  return commands;
+}
 
 interface HistLine {
   id: number;
@@ -240,6 +255,10 @@ const banner = (
 );
 
 export function TerminalHero() {
+  const { lang } = useLang();
+  const commands = useMemo(() => buildCommands(lang), [lang]);
+  const files = useMemo(() => Object.keys(buildSections(lang)), [lang]);
+
   const reduced =
     typeof window !== "undefined" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -322,7 +341,7 @@ export function TerminalHero() {
     setPastIdx(-1);
 
     const [name, ...args] = trimmed.split(/\s+/);
-    const cmd = COMMANDS[name.toLowerCase()];
+    const cmd = commands[name.toLowerCase()];
 
     if (!cmd) {
       setHistory((h) => [
@@ -347,7 +366,7 @@ export function TerminalHero() {
       return;
     }
     setHistory((h) => [...h, { id: lineId++, cmd: trimmed, out: result }]);
-  }, []);
+  }, [commands]);
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Tab") {
@@ -356,9 +375,9 @@ export function TerminalHero() {
       // completing the command token, or `cat`/`ls`'s file argument
       const pool =
         rest.length === 0
-          ? Object.keys(COMMANDS)
+          ? Object.keys(commands)
           : name === "cat" || name === "ls"
-            ? [...FILES]
+            ? [...files]
             : [];
       const frag = rest.length === 0 ? name : rest[rest.length - 1];
       const hits = pool.filter((c) => c.startsWith(frag));
