@@ -7,24 +7,24 @@ import type { L } from "../types";
  */
 export const ui = {
   hero: {
-    openToWork: { en: "open to work", tr: "" },
-    viewProjects: { en: "view projects", tr: "" },
+    openToWork: { en: "open to work", tr: "işe açık" },
+    viewProjects: { en: "view projects", tr: "projeleri gör" },
   },
   contact: {
     text: {
       en: "Open to backend and full-stack roles. If you're building something interesting — or just want to talk systems — my inbox is open.",
-      tr: "",
+      tr: "Backend ve full-stack rollere açığım. İlginç bir şey geliştiriyorsan — ya da sadece sistemler üzerine konuşmak istiyorsan — kutum açık.",
     },
   },
   projects: {
-    viewSource: { en: "view source →", tr: "" },
+    viewSource: { en: "view source →", tr: "kaynağı gör →" },
   },
   experience: {
-    graduated: { en: "graduated", tr: "" }, // prefix before date
+    graduated: { en: "graduated", tr: "mezuniyet" }, // prefix before date
   },
   nav: {
-    openMenu: { en: "Open menu", tr: "" },
-    closeMenu: { en: "Close menu", tr: "" },
-    langLabel: { en: "Switch language", tr: "" },
+    openMenu: { en: "Open menu", tr: "Menüyü aç" },
+    closeMenu: { en: "Close menu", tr: "Menüyü kapat" },
+    langLabel: { en: "Switch language", tr: "Dil değiştir" },
   },
 } satisfies Record<string, Record<string, L<string>>>;
