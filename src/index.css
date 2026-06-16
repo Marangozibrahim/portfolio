@@ -1396,11 +1396,25 @@ html[data-motion="off"] .hero-status .dot {
     padding-right: 20px;
   }
 
+  .nav-inner {
+    position: relative;
+  }
+
+  /* logo stays left, hamburger forced to the right end, lang centered */
   .nav-toggle {
     display: inline-flex;
+    order: 3;
   }
   .nav-links a .idx {
     display: none;
+  }
+
+  .nav-lang {
+    order: 2;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-left: 0;
   }
 
   /* collapsed by default; .open drops an absolute panel below the bar
