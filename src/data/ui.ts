@@ -12,8 +12,8 @@ export const ui = {
   },
   contact: {
     text: {
-      en: "Open to backend and full-stack roles. If you're building something interesting — or just want to talk systems — my inbox is open.",
-      tr: "Backend ve full-stack rollere açığım. İlginç bir şey geliştiriyorsan — ya da sadece sistemler üzerine konuşmak istiyorsan — kutum açık.",
+      en: "Open to backend and full-stack roles. If you're building something interesting, or just want to talk systems, my inbox is open.",
+      tr: "Backend ve full-stack rollere açığım. İlginç bir şey geliştiriyorsan ya da sadece sistemler üzerine konuşmak istiyorsan kutum açık.",
     },
   },
   projects: {

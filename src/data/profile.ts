@@ -4,8 +4,8 @@ export const profile: Profile = {
   name: "Halil Ibrahim Marangoz",
   role: { en: "Backend Engineer", tr: "Backend Mühendisi" },
   tagline: {
-    en: "I build the parts of the backend that can't fail — secure auth flows, clean architecture, and APIs that hold up under load.",
-    tr: "Backend'in hata kaldırmayan kısımlarını kurarım — güvenli kimlik doğrulama akışları, temiz mimari ve yük altında ayakta kalan API'ler.",
+    en: "Backend engineer. I build auth systems, REST APIs, and the data layer behind them, in Python/FastAPI and C#/.NET.",
+    tr: "Backend mühendisi. Python/FastAPI ve C#/.NET ile auth sistemleri, REST API'ler ve arkalarındaki veri katmanını kurarım.",
   },
   email: "marangozibrahim49@gmail.com",
   github: "https://github.com/Marangozibrahim",

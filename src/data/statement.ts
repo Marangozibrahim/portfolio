@@ -11,11 +11,11 @@ export const statement: {
     tr: ["REST API'ler", "Kimlik doğrulama", "PostgreSQL", "Redis", "Docker"],
   },
   heading: {
-    en: "I specialize in secure authentication, scalable APIs, and architecture that stays clean as systems grow.",
-    tr: "Güvenli kimlik doğrulama, ölçeklenebilir API'ler ve sistemler büyüdükçe temiz kalan mimari üzerine uzmanlaşıyorum.",
+    en: "I work on authentication, APIs, and the architecture that holds them together.",
+    tr: "Kimlik doğrulama, API'ler ve bunları bir arada tutan mimari üzerine çalışıyorum.",
   },
   bio: {
-    en: "Equally at home in Python/FastAPI and C#/.NET. I care about the unglamorous parts — tests, structured logging, migrations — because that's what keeps a system maintainable after I'm gone.",
-    tr: "Python/FastAPI ve C#/.NET tarafında eşit derecede rahatım. Gösterişsiz kısımları önemserim — testler, yapısal loglama, migration'lar — çünkü bir sistemi ben gittikten sonra da bakımı yapılabilir tutan budur.",
+    en: "I work in Python/FastAPI and C#/.NET. Most of my time goes to the parts that don't show up in a demo: tests, logging, migrations. That's what a codebase lives or dies on.",
+    tr: "Python/FastAPI ve C#/.NET ile çalışıyorum. Zamanımın çoğu bir demoda görünmeyen kısımlara gidiyor: testler, loglama, migration'lar. Bir kod tabanı asıl bunlarla ayakta kalır.",
   },
 };
