@@ -48,7 +48,7 @@ export function BootLoader() {
         <span className="boot-line">
           <span className="boot-bar" style={{ width: `${pct}%` }}></span>
         </span>
-        <span className="boot-pct">{String(pct).padStart(3, "0")}%</span>
+        <span className="boot-pct">{pct}%</span>
       </div>
     </div>
   );
