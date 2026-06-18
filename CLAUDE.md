@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Personal portfolio site for Halil Ibrahim Marangoz (backend engineer). React 19 + TypeScript + Vite, single page, no router, no backend. Deployed as static files.
+Personal portfolio site for Halil Ibrahim Marangoz (full-stack engineer). React 19 + TypeScript + Vite, single page, no router, no backend. Deployed as static files.
 
 ## Commands
 

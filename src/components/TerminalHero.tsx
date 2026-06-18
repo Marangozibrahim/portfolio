@@ -30,7 +30,7 @@ const entries: Entry[] = [
     cmd: "whoami",
     out: (
       <>
-        <span className="k">halil ibrahim marangoz</span> — backend engineer
+        <span className="k">halil ibrahim marangoz</span> — full-stack engineer
       </>
     ),
   },

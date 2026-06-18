@@ -1,6 +1,6 @@
 # Portfolio — Halil Ibrahim Marangoz
 
-Personal portfolio of **Halil Ibrahim Marangoz**, backend engineer.
+Personal portfolio of **Halil Ibrahim Marangoz**, full-stack engineer.
 
 Dark terminal-themed single-page site: animated boot loader, a hero that types out a fake shell session, HUD overlay with live scroll/cursor readouts, masked word-by-word text reveals, and inertia smooth scrolling.
 
