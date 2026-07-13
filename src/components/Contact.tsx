@@ -14,6 +14,9 @@ export function Contact() {
           {profile.email}
         </a>
         <div className="contact-links">
+          <a className="btn" href="/cv.pdf" target="_blank" rel="noreferrer" download>
+            {t(ui.contact.downloadCv)} ↓
+          </a>
           <a className="btn" href={profile.github} target="_blank" rel="noreferrer">
             github ↗
           </a>
