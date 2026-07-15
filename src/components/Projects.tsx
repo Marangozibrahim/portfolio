@@ -26,8 +26,8 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         </div>
         <div className="project-head">
           <h3>
-            {project.repoUrl ? (
-              <a href={project.repoUrl} target="_blank" rel="noreferrer">
+            {project.liveUrl ?? project.repoUrl ? (
+              <a href={project.liveUrl ?? project.repoUrl} target="_blank" rel="noreferrer">
                 {project.name}
               </a>
             ) : (
@@ -48,11 +48,24 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               <span key={s}>{s}</span>
             ))}
           </div>
-          {project.repoUrl && (
-            <a className="project-link" href={project.repoUrl} target="_blank" rel="noreferrer">
-              {t(ui.projects.viewSource)}
-            </a>
-          )}
+          <div className="project-links">
+            {project.liveUrl && (
+              <a
+                className="project-link project-link--live"
+                href={project.liveUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span className="live-dot" aria-hidden="true" />
+                {t(ui.projects.viewLive)}
+              </a>
+            )}
+            {project.repoUrl && (
+              <a className="project-link" href={project.repoUrl} target="_blank" rel="noreferrer">
+                {t(ui.projects.viewSource)}
+              </a>
+            )}
+          </div>
         </div>
       </article>
     </Reveal>

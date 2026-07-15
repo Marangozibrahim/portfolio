@@ -19,6 +19,7 @@ export const ui = {
   },
   projects: {
     viewSource: { en: "view source →", tr: "kaynağı gör →" },
+    viewLive: { en: "view live →", tr: "canlı gör →" },
   },
   experience: {
     graduated: { en: "graduated", tr: "mezuniyet" }, // prefix before date

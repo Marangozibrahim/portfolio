@@ -24,6 +24,7 @@ export interface Project {
   name: string;
   period: string;
   repoUrl?: string;
+  liveUrl?: string;
   role?: L<string>;
   summary: L<string>;
   highlights: L<string[]>;

@@ -1077,6 +1077,13 @@ body::before {
   border-color: var(--accent);
 }
 
+.project-links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
 .project-link {
   font-size: 12px;
   letter-spacing: 0.1em;
@@ -1087,6 +1094,46 @@ body::before {
 .project-link:hover {
   text-decoration: underline;
   text-underline-offset: 4px;
+}
+
+.project-link--live {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 700;
+  color: var(--bg);
+  background: var(--accent);
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition:
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.project-link--live:hover {
+  text-decoration: none;
+  box-shadow: 0 0 18px rgba(var(--accent-rgb), 0.35);
+  transform: translateY(-1px);
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--bg);
+  animation: pulse-dark 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dark {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(5, 7, 9, 0.5);
+  }
+  50% {
+    opacity: 0.6;
+    box-shadow: 0 0 0 5px rgba(5, 7, 9, 0);
+  }
 }
 
 /* ---------- experience ---------- */
@@ -1508,7 +1555,8 @@ html[data-motion="off"] .hero-status .dot {
   }
 
   .caret,
-  .hero-status .dot {
+  .hero-status .dot,
+  .live-dot {
     animation: none;
   }
 

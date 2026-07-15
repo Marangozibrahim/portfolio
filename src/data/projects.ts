@@ -6,6 +6,7 @@ export const projects: Project[] = [
     name: "Real-Time Chat App",
     period: "May 2026 — Jun 2026",
     repoUrl: "https://github.com/Marangozibrahim/chat-app",
+    liveUrl: "https://chatapp.ibrahimmarangoz.com",
     summary: {
       en: "Built a horizontally-scalable group chat that fans real-time messages out across N worker processes with zero inter-worker coordination using FastAPI, React, Redis pub/sub, and WebSockets.",
       tr: "Worker'lar arası koordinasyon gerektirmeden gerçek zamanlı mesajları N worker sürecine dağıtan yatay ölçeklenebilir grup sohbeti — FastAPI, React, Redis pub/sub ve WebSocket ile geliştirildi.",
